@@ -183,15 +183,15 @@ def apply_theme():
             color-scheme: dark;
         }
         .stApp {
-            background-color: #0f1116;
+            background-color: #0d1017;
             color: #f5f7fb;
         }
         [data-testid="stHeader"] {
-            background: rgba(15, 17, 22, 0.85);
+            background: rgba(13, 16, 23, 0.88);
         }
         section[data-testid="stSidebar"] {
-            background-color: #171a24;
-            border-right: 1px solid #333a52;
+            background-color: #111520;
+            border-right: 1px solid #242b3a;
         }
         section[data-testid="stSidebar"] * {
             color: #f5f7fb;
@@ -204,9 +204,9 @@ def apply_theme():
         div[data-testid="stNumberInput"] input,
         textarea,
         select {
-            background-color: #1a1d29 !important;
+            background-color: #151a26 !important;
             color: #f5f7fb !important;
-            border-color: #333a52 !important;
+            border-color: #2f384b !important;
         }
         div[data-testid="stDataFrame"],
         div[data-testid="stTable"] {
@@ -218,20 +218,25 @@ def apply_theme():
         }
         button[kind="primary"],
         div[data-testid="stButton"] button {
-            background-color: #262b3d;
+            background-color: #202737;
             color: #ffffff;
-            border-color: #46506d;
+            border-color: #354158;
+            border-radius: 8px;
         }
         div[data-testid="stButton"] button:hover {
-            border-color: #7c8fcb;
+            border-color: #7ca7ff;
             color: #ffffff;
         }
+        div[data-testid="stDownloadButton"] button,
+        div[data-testid="stLinkButton"] a {
+            border-radius: 8px;
+        }
         .metric-card {
-            background: linear-gradient(135deg, #1e2130, #262b3d);
-            border-radius: 14px;
+            background: #151a26;
+            border-radius: 8px;
             padding: 18px;
             text-align: center;
-            border: 1px solid #333a52;
+            border: 1px solid #263047;
         }
         .metric-card h3 { color: #9aa4c7; font-size: 14px; margin-bottom: 6px; }
         .metric-card h1 { color: #ffffff; font-size: 28px; margin: 0; }
@@ -241,9 +246,33 @@ def apply_theme():
             max-width: 380px;
             margin: 60px auto;
             padding: 30px;
-            border-radius: 16px;
-            background: #1a1d29;
-            border: 1px solid #333a52;
+            border-radius: 8px;
+            background: #151a26;
+            border: 1px solid #263047;
+        }
+        .page-kicker, .muted-text { color: #99a6bd !important; }
+        .soft-panel {
+            background: #151a26;
+            border: 1px solid #263047;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        .role-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border: 1px solid #31405d;
+            border-radius: 999px;
+            background: #1b2333;
+            color: #dce7ff;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .sidebar-brand {
+            font-size: 19px;
+            font-weight: 750;
+            margin-bottom: 4px;
         }
         </style>
         """, unsafe_allow_html=True)
@@ -254,11 +283,11 @@ def apply_theme():
             color-scheme: light;
         }
         .stApp {
-            background-color: #f8f9fa;
+            background-color: #f6f7f9;
             color: #212529;
         }
         [data-testid="stHeader"] {
-            background: rgba(248, 249, 250, 0.85);
+            background: rgba(246, 247, 249, 0.88);
         }
         section[data-testid="stSidebar"] {
             background-color: #ffffff;
@@ -283,18 +312,19 @@ def apply_theme():
             background-color: #ffffff;
             color: #212529;
             border-color: #ced4da;
+            border-radius: 8px;
         }
         div[data-testid="stButton"] button:hover {
             border-color: #868e96;
             color: #212529;
         }
         .metric-card {
-            background: linear-gradient(135deg, #ffffff, #f1f3f5);
-            border-radius: 14px;
+            background: #ffffff;
+            border-radius: 8px;
             padding: 18px;
             text-align: center;
             border: 1px solid #dee2e6;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 20px rgba(15,23,42,0.05);
         }
         .metric-card h3 { color: #495057; font-size: 14px; margin-bottom: 6px; }
         .metric-card h1 { color: #212529; font-size: 28px; margin: 0; }
@@ -304,12 +334,41 @@ def apply_theme():
             max-width: 380px;
             margin: 60px auto;
             padding: 30px;
-            border-radius: 16px;
+            border-radius: 8px;
             background: #ffffff;
             border: 1px solid #dee2e6;
             box-shadow: 0 10px 15px rgba(0,0,0,0.05);
         }
         .stMarkdown, p, label, h1, h2, h3, h4, h5, h6 { color: #212529 !important; }
+        div[data-testid="stDownloadButton"] button,
+        div[data-testid="stLinkButton"] a {
+            border-radius: 8px;
+        }
+        .page-kicker, .muted-text { color: #667085 !important; }
+        .soft-panel {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 18px;
+            box-shadow: 0 8px 20px rgba(15,23,42,0.04);
+        }
+        .role-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border: 1px solid #d0d5dd;
+            border-radius: 999px;
+            background: #f9fafb;
+            color: #344054;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .sidebar-brand {
+            font-size: 19px;
+            font-weight: 750;
+            margin-bottom: 4px;
+        }
         </style>
         """, unsafe_allow_html=True)
 
@@ -324,6 +383,28 @@ if "username" not in st.session_state:
 
 def is_admin_user():
     return st.session_state.username in ADMIN_USERS
+
+def page_title(title: str, subtitle: str = ""):
+    st.markdown(f"<div class='page-kicker'>Smart School Dashboard</div>", unsafe_allow_html=True)
+    st.title(title)
+    if subtitle:
+        st.markdown(f"<p class='muted-text'>{subtitle}</p>", unsafe_allow_html=True)
+
+def compact_card(label: str, value: str, note: str = ""):
+    note_html = f"<p class='muted-text' style='margin:6px 0 0'>{note}</p>" if note else ""
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <h3>{label}</h3>
+            <h1>{value}</h1>
+            {note_html}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+def role_label():
+    return "Admin" if is_admin_user() else "Teacher"
 
 # ================== MQTT (cached, one connection per server process) ==================
 
@@ -355,6 +436,7 @@ def get_mqtt_data():
 
 def login_page():
     st.markdown("<h1 style='text-align:center;'>🏫 Smart School Dashboard</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='muted-text' style='text-align:center;'>Attendance, canteen monitoring, and alerts in one simple workspace.</p>", unsafe_allow_html=True)
     st.markdown("<div class='login-box'>", unsafe_allow_html=True)
     st.subheader("Login")
     uid = st.text_input("ID")
@@ -371,24 +453,34 @@ def login_page():
 # ================== ATTENDANCE PAGE ==================
 
 def attendance_page():
-    st.header("📋 Attendance Entry")
+    page_title("Attendance", "Record class attendance and review daily patterns.")
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        class_name = st.text_input("Class (e.g. 10-A)")
-    with col2:
-        present = st.number_input("Present", min_value=0, step=1)
-    with col3:
-        total = st.number_input("Total students", min_value=0, step=1)
+    with st.container():
+        st.markdown("<div class='soft-panel'>", unsafe_allow_html=True)
+        with st.form("attendance_entry_form", clear_on_submit=True):
+            col1, col2, col3 = st.columns([1.4, 1, 1])
+            with col1:
+                class_name = st.text_input("Class", placeholder="e.g. 10-A")
+            with col2:
+                present = st.number_input("Present", min_value=0, step=1)
+            with col3:
+                total = st.number_input("Total students", min_value=0, step=1)
 
-    if st.button("Submit Attendance"):
+            submitted = st.form_submit_button("Submit Attendance", use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    if submitted:
         if class_name.strip() == "":
             st.error("Enter a class name")
+        elif present > total:
+            st.error("Present students cannot be more than total students")
+        elif total == 0:
+            st.error("Total students must be greater than 0")
         else:
             new_row = pd.DataFrame([{
                 "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
                 "teacher": st.session_state.username,
-                "class": class_name,
+                "class": class_name.strip(),
                 "present": present,
                 "total": total,
             }])
@@ -396,9 +488,10 @@ def attendance_page():
                 new_row.to_csv(ATTENDANCE_FILE, mode="a", header=False, index=False)
             else:
                 new_row.to_csv(ATTENDANCE_FILE, index=False)
-            st.success(f"Attendance saved for {class_name}")
+            st.success(f"Attendance saved for {class_name.strip()}")
 
-    st.subheader("Today's Records")
+    st.divider()
+
     if os.path.exists(ATTENDANCE_FILE):
         df = pd.read_csv(ATTENDANCE_FILE)
         df["date"] = pd.to_datetime(df["date"], errors="coerce")
@@ -406,13 +499,6 @@ def attendance_page():
         df["total"] = pd.to_numeric(df["total"], errors="coerce").fillna(0)
 
         csv_data = df.to_csv(index=False).encode("utf-8")
-        st.download_button(
-            "Download Attendance CSV",
-            data=csv_data,
-            file_name="attendance.csv",
-            mime="text/csv",
-            use_container_width=True,
-        )
 
         daily_df = df.dropna(subset=["date"]).copy()
         daily_df["day"] = daily_df["date"].dt.date
@@ -422,6 +508,23 @@ def attendance_page():
         )
         daily_summary = daily_summary[daily_summary["total"] > 0]
 
+        overview_tab, records_tab = st.tabs(["Overview", "Records"])
+
+        with overview_tab:
+            total_present = int(df["present"].sum())
+            total_students = int(df["total"].sum())
+            overall_percent = (total_present / total_students * 100) if total_students else 0
+
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Overall Attendance", f"{overall_percent:.2f}%")
+            with col2:
+                st.metric("Students Present", total_present)
+            with col3:
+                st.metric("Records Saved", len(df))
+
+            st.progress(min(overall_percent / 100, 1.0), text=f"Overall attendance: {overall_percent:.2f}%")
+
         if not daily_summary.empty:
             daily_summary["attendance_percent"] = (
                 daily_summary["present"] / daily_summary["total"] * 100
@@ -429,29 +532,42 @@ def attendance_page():
             top_day = daily_summary.loc[daily_summary["attendance_percent"].idxmax()]
             least_day = daily_summary.loc[daily_summary["attendance_percent"].idxmin()]
 
-            col1, col2 = st.columns(2)
-            with col1:
-                st.metric(
-                    "Top Attendance Day",
-                    str(top_day["day"]),
-                    f'{top_day["attendance_percent"]:.2f}%',
-                )
-            with col2:
-                st.metric(
-                    "Least Attendance Day",
-                    str(least_day["day"]),
-                    f'{least_day["attendance_percent"]:.2f}%',
-                )
+            with overview_tab:
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.metric(
+                        "Top Attendance Day",
+                        str(top_day["day"]),
+                        f'{top_day["attendance_percent"]:.2f}%',
+                    )
+                with col2:
+                    st.metric(
+                        "Least Attendance Day",
+                        str(least_day["day"]),
+                        f'{least_day["attendance_percent"]:.2f}%',
+                    )
 
-            with st.expander("Daily Attendance Summary"):
-                st.dataframe(
-                    daily_summary.sort_values("day", ascending=False),
-                    use_container_width=True,
-                )
+                chart_df = daily_summary.sort_values("day").set_index("day")[["attendance_percent"]]
+                st.line_chart(chart_df, height=260)
+
+                with st.expander("Daily Attendance Summary"):
+                    st.dataframe(
+                        daily_summary.sort_values("day", ascending=False),
+                        use_container_width=True,
+                    )
         else:
-            st.info("Add records with total students greater than 0 to see top and least attendance days.")
+            with overview_tab:
+                st.info("Add records with total students greater than 0 to see top and least attendance days.")
 
-        st.dataframe(df.sort_values("date", ascending=False), use_container_width=True)
+        with records_tab:
+            st.download_button(
+                "Download Attendance CSV",
+                data=csv_data,
+                file_name="attendance.csv",
+                mime="text/csv",
+                use_container_width=True,
+            )
+            st.dataframe(df.sort_values("date", ascending=False), use_container_width=True)
     else:
         st.info("No attendance records yet.")
 
@@ -462,33 +578,38 @@ def canteen_page():
         st.error("Only admin users can access the canteen dashboard.")
         return
 
-    st.header("🍽️ Canteen Live Status")
+    page_title("Canteen Live Status", "Monitor safety signals from the ESP32 canteen system.")
     data = get_mqtt_data()
 
     # Run alert check every time this page loads / refreshes
     check_and_send_alerts(data)
 
-    cols = st.columns(3)
-    labels = {
-        "gas-status": ("⚠️ Gas Status", cols[0]),
-        "waste-bin": ("🗑️ Waste Bin (%)", cols[1]),
-        "kitchen-health": ("💚 Kitchen Health", cols[2]),
-        "fan-status": ("🌀 Fan Status", cols[0]),
-        "valve-status": ("🔧 Valve Status", cols[1]),
-        "event-log": ("📝 Last Event", cols[2]),
-    }
+    gas_status = data.get("gas-status", "—")
+    waste_raw = data.get("waste-bin", "0")
+    try:
+        waste_percent = max(0, min(int(waste_raw), 100))
+    except (ValueError, TypeError):
+        waste_percent = 0
 
-    for feed, (label, col) in labels.items():
-        with col:
-            st.markdown(f"""
-            <div class="metric-card">
-                <h3>{label}</h3>
-                <h1>{data.get(feed, "—")}</h1>
-            </div>
-            """, unsafe_allow_html=True)
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        compact_card("Gas Status", gas_status, "Valve closes automatically on leak")
+    with col2:
+        compact_card("Waste Bin", f"{data.get('waste-bin', '—')}%", f"Full alert at {BIN_FULL_THRESHOLD}%")
+        st.progress(waste_percent / 100, text=f"Waste level: {waste_percent}%")
+    with col3:
+        compact_card("Kitchen Health", data.get("kitchen-health", "—"), "Live MQTT feed")
 
-    st.caption("Live data via MQTT (broker.hivemq.com) — updates automatically when the ESP32 publishes.")
-    if st.button("🔄 Refresh"):
+    col4, col5, col6 = st.columns(3)
+    with col4:
+        compact_card("Fan", data.get("fan-status", "—"))
+    with col5:
+        compact_card("Valve", data.get("valve-status", "—"))
+    with col6:
+        compact_card("Last Event", data.get("event-log", "—"))
+
+    st.caption("Live data via MQTT (broker.hivemq.com). Use refresh if the board has just published new data.")
+    if st.button("Refresh Live Data", use_container_width=True):
         st.rerun()
 
 # ================== ALERT SETTINGS PAGE ==================
@@ -498,8 +619,7 @@ def alert_settings_page():
         st.error("Only admin users can access alert settings.")
         return
 
-    st.header("📱 WhatsApp Alert Settings")
-    st.write("Enter the WhatsApp number that should receive gas leak and waste bin full alerts.")
+    page_title("Alert Settings", "Configure the phone number used for canteen safety alerts.")
 
     current = st.session_state.alert_state.get("phone", "")
     phone_input = st.text_input(
@@ -550,7 +670,13 @@ def alert_settings_page():
 
 def main_app():
     with st.sidebar:
-        st.markdown(f"### 👋 {st.session_state.username}")
+        st.markdown("<div class='sidebar-brand'>Smart School</div>", unsafe_allow_html=True)
+        st.markdown(
+            f"<span class='role-pill'>{role_label()}</span>",
+            unsafe_allow_html=True,
+        )
+        st.caption(f"Signed in as {st.session_state.username}")
+        st.divider()
         pages = ["Attendance"]
         if is_admin_user():
             pages.extend(["Canteen Dashboard", "Alert Settings"])
