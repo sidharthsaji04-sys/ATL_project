@@ -41,6 +41,7 @@ import pandas as pd
 import os
 import json
 import re
+from urllib.parse import quote
 from datetime import datetime
 
 # ================== CONFIG ==================
@@ -101,6 +102,10 @@ def is_valid_whatsapp_number(number: str) -> bool:
     # Expects E.164 format, e.g. +919876543210
     return bool(re.match(r"^\+[1-9]\d{7,14}$", number.strip()))
 
+def whatsapp_web_link(phone: str, message: str) -> str:
+    digits_only = re.sub(r"\D", "", phone)
+    return f"https://wa.me/{digits_only}?text={quote(message)}"
+
 def send_whatsapp_alert(message: str):
     phone = st.session_state.alert_state.get("phone", "").strip()
     if not phone:
@@ -113,6 +118,8 @@ def send_whatsapp_alert(message: str):
         sid = st.secrets["TWILIO_ACCOUNT_SID"]
         token = st.secrets["TWILIO_AUTH_TOKEN"]
         from_number = st.secrets["TWILIO_WHATSAPP_FROM"]
+        if sid == "your_account_sid" or token == "your_auth_token":
+            return False, "Twilio is not configured yet."
         if not str(from_number).startswith("whatsapp:"):
             return False, "TWILIO_WHATSAPP_FROM must start with whatsapp:, e.g. whatsapp:+14155238886."
 
@@ -391,6 +398,56 @@ def attendance_page():
     st.subheader("Today's Records")
     if os.path.exists(ATTENDANCE_FILE):
         df = pd.read_csv(ATTENDANCE_FILE)
+        df["date"] = pd.to_datetime(df["date"], errors="coerce")
+        df["present"] = pd.to_numeric(df["present"], errors="coerce").fillna(0)
+        df["total"] = pd.to_numeric(df["total"], errors="coerce").fillna(0)
+
+        csv_data = df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            "Download Attendance CSV",
+            data=csv_data,
+            file_name="attendance.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
+
+        daily_df = df.dropna(subset=["date"]).copy()
+        daily_df["day"] = daily_df["date"].dt.date
+        daily_summary = daily_df.groupby("day", as_index=False).agg(
+            present=("present", "sum"),
+            total=("total", "sum"),
+        )
+        daily_summary = daily_summary[daily_summary["total"] > 0]
+
+        if not daily_summary.empty:
+            daily_summary["attendance_percent"] = (
+                daily_summary["present"] / daily_summary["total"] * 100
+            ).round(2)
+            top_day = daily_summary.loc[daily_summary["attendance_percent"].idxmax()]
+            least_day = daily_summary.loc[daily_summary["attendance_percent"].idxmin()]
+
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric(
+                    "Top Attendance Day",
+                    str(top_day["day"]),
+                    f'{top_day["attendance_percent"]:.2f}%',
+                )
+            with col2:
+                st.metric(
+                    "Least Attendance Day",
+                    str(least_day["day"]),
+                    f'{least_day["attendance_percent"]:.2f}%',
+                )
+
+            with st.expander("Daily Attendance Summary"):
+                st.dataframe(
+                    daily_summary.sort_values("day", ascending=False),
+                    use_container_width=True,
+                )
+        else:
+            st.info("Add records with total students greater than 0 to see top and least attendance days.")
+
         st.dataframe(df.sort_values("date", ascending=False), use_container_width=True)
     else:
         st.info("No attendance records yet.")
@@ -452,13 +509,13 @@ def alert_settings_page():
 
     st.divider()
     st.caption(
-        "Note: this uses Twilio's WhatsApp Sandbox for testing. "
-        "The recipient must first send the sandbox's join code to the Twilio WhatsApp "
-        "number once, from their own WhatsApp, before they can receive messages."
+        "Automatic WhatsApp sending needs Twilio credentials. Without Twilio, the test button "
+        "will open WhatsApp with the message pre-filled so you can send it manually."
     )
 
     if st.button("Send Test Alert"):
         phone_to_test = phone_input.strip()
+        test_message = "✅ Test alert from Smart School Dashboard. WhatsApp alerts are working."
         if phone_to_test and phone_to_test != st.session_state.alert_state.get("phone", ""):
             if is_valid_whatsapp_number(phone_to_test):
                 st.session_state.alert_state["phone"] = phone_to_test
@@ -467,11 +524,16 @@ def alert_settings_page():
                 st.error("Enter a valid WhatsApp number before sending the test alert.")
                 return
 
-        ok, message = send_whatsapp_alert("✅ Test alert from Smart School Dashboard. WhatsApp alerts are working.")
+        ok, message = send_whatsapp_alert(test_message)
         if ok:
             st.success(message)
         else:
-            st.error(message)
+            saved_phone = st.session_state.alert_state.get("phone", "").strip()
+            if saved_phone and is_valid_whatsapp_number(saved_phone):
+                st.warning(f"{message} Use the manual WhatsApp link below instead.")
+                st.link_button("Open WhatsApp Test Message", whatsapp_web_link(saved_phone, test_message))
+            else:
+                st.error(message)
 
 # ================== MAIN APP ==================
 
