@@ -68,6 +68,7 @@ USERS = {
     "admin": "admin123",
     "Principal": "principal123456789##",
 }
+ADMIN_USERS = {"admin", "Principal"}
 
 ATTENDANCE_FILE = "attendance.csv"
 ALERT_STATE_FILE = "alert_state.json"
@@ -322,6 +323,9 @@ if "logged_in" not in st.session_state:
 if "username" not in st.session_state:
     st.session_state.username = ""
 
+def is_admin_user():
+    return st.session_state.username in ADMIN_USERS
+
 # ================== MQTT (cached, one connection per server process) ==================
 
 @st.cache_resource
@@ -455,6 +459,10 @@ def attendance_page():
 # ================== CANTEEN DASHBOARD PAGE ==================
 
 def canteen_page():
+    if not is_admin_user():
+        st.error("Only admin users can access the canteen dashboard.")
+        return
+
     st.header("🍽️ Canteen Live Status")
     data = get_mqtt_data()
 
@@ -487,6 +495,10 @@ def canteen_page():
 # ================== ALERT SETTINGS PAGE ==================
 
 def alert_settings_page():
+    if not is_admin_user():
+        st.error("Only admin users can access alert settings.")
+        return
+
     st.header("📱 WhatsApp Alert Settings")
     st.write("Enter the WhatsApp number that should receive gas leak and waste bin full alerts.")
 
@@ -540,7 +552,10 @@ def alert_settings_page():
 def main_app():
     with st.sidebar:
         st.markdown(f"### 👋 {st.session_state.username}")
-        page = st.radio("Navigate", ["Attendance", "Canteen Dashboard", "Alert Settings"])
+        pages = ["Attendance"]
+        if is_admin_user():
+            pages.extend(["Canteen Dashboard", "Alert Settings"])
+        page = st.radio("Navigate", pages)
         st.divider()
 
         is_dark = st.toggle("🌙 Dark Mode", value=(st.session_state.theme == "dark"))
