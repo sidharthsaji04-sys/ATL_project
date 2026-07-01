@@ -102,26 +102,31 @@ def is_valid_whatsapp_number(number: str) -> bool:
     return bool(re.match(r"^\+[1-9]\d{7,14}$", number.strip()))
 
 def send_whatsapp_alert(message: str):
-    phone = st.session_state.alert_state.get("phone", "")
+    phone = st.session_state.alert_state.get("phone", "").strip()
     if not phone:
-        return  # no number configured yet, silently skip
+        return False, "No WhatsApp number is configured yet."
+    if not is_valid_whatsapp_number(phone):
+        return False, "Saved WhatsApp number is invalid. Use international format, e.g. +919876543210."
 
     try:
         from twilio.rest import Client
         sid = st.secrets["TWILIO_ACCOUNT_SID"]
         token = st.secrets["TWILIO_AUTH_TOKEN"]
         from_number = st.secrets["TWILIO_WHATSAPP_FROM"]
+        if not str(from_number).startswith("whatsapp:"):
+            return False, "TWILIO_WHATSAPP_FROM must start with whatsapp:, e.g. whatsapp:+14155238886."
 
         client = Client(sid, token)
-        client.messages.create(
+        message_result = client.messages.create(
             from_=from_number,
             body=message,
             to=f"whatsapp:{phone}",
         )
+        return True, f"Message queued by Twilio. SID: {message_result.sid}"
     except KeyError:
-        st.warning("Twilio secrets not configured - see setup instructions at the top of app.py")
+        return False, "Twilio secrets are not configured. Add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and TWILIO_WHATSAPP_FROM to .streamlit/secrets.toml."
     except Exception as e:
-        st.warning(f"Could not send WhatsApp alert: {e}")
+        return False, f"Could not send WhatsApp alert: {e}"
 
 def check_and_send_alerts(data: dict):
     """Edge-triggered alerts: only fires the moment a condition BECOMES true,
@@ -138,13 +143,17 @@ def check_and_send_alerts(data: dict):
     changed = False
 
     if gas_leak_now and not state["last_gas_leak"]:
-        send_whatsapp_alert("🚨 SCHOOL CANTEEN ALERT: Gas leak detected! Valve is being closed automatically. Please check the dashboard.")
+        ok, message = send_whatsapp_alert("🚨 SCHOOL CANTEEN ALERT: Gas leak detected! Valve is being closed automatically. Please check the dashboard.")
+        if not ok:
+            st.warning(message)
         changed = True
     if not gas_leak_now and state["last_gas_leak"]:
         changed = True  # reset, no message needed for "all clear" unless you want one
 
     if bin_full_now and not state["last_bin_full"]:
-        send_whatsapp_alert(f"🗑️ SCHOOL CANTEEN ALERT: Waste bin is full ({data.get('waste-bin', '?')}%). Please arrange for it to be emptied.")
+        ok, message = send_whatsapp_alert(f"🗑️ SCHOOL CANTEEN ALERT: Waste bin is full ({data.get('waste-bin', '?')}%). Please arrange for it to be emptied.")
+        if not ok:
+            st.warning(message)
         changed = True
     if not bin_full_now and state["last_bin_full"]:
         changed = True
@@ -163,7 +172,53 @@ def apply_theme():
     if st.session_state.theme == "dark":
         st.markdown("""
         <style>
-        .main { background-color: #0f1116; }
+        :root {
+            color-scheme: dark;
+        }
+        .stApp {
+            background-color: #0f1116;
+            color: #f5f7fb;
+        }
+        [data-testid="stHeader"] {
+            background: rgba(15, 17, 22, 0.85);
+        }
+        section[data-testid="stSidebar"] {
+            background-color: #171a24;
+            border-right: 1px solid #333a52;
+        }
+        section[data-testid="stSidebar"] * {
+            color: #f5f7fb;
+        }
+        .stMarkdown, p, label, h1, h2, h3, h4, h5, h6,
+        [data-testid="stMarkdownContainer"] {
+            color: #f5f7fb !important;
+        }
+        div[data-testid="stTextInput"] input,
+        div[data-testid="stNumberInput"] input,
+        textarea,
+        select {
+            background-color: #1a1d29 !important;
+            color: #f5f7fb !important;
+            border-color: #333a52 !important;
+        }
+        div[data-testid="stDataFrame"],
+        div[data-testid="stTable"] {
+            color: #f5f7fb;
+        }
+        div[data-testid="stAlert"] {
+            background-color: #1a1d29;
+            color: #f5f7fb;
+        }
+        button[kind="primary"],
+        div[data-testid="stButton"] button {
+            background-color: #262b3d;
+            color: #ffffff;
+            border-color: #46506d;
+        }
+        div[data-testid="stButton"] button:hover {
+            border-color: #7c8fcb;
+            color: #ffffff;
+        }
         .metric-card {
             background: linear-gradient(135deg, #1e2130, #262b3d);
             border-radius: 14px;
@@ -188,7 +243,44 @@ def apply_theme():
     else:
         st.markdown("""
         <style>
-        .main { background-color: #f8f9fa; }
+        :root {
+            color-scheme: light;
+        }
+        .stApp {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        [data-testid="stHeader"] {
+            background: rgba(248, 249, 250, 0.85);
+        }
+        section[data-testid="stSidebar"] {
+            background-color: #ffffff;
+            border-right: 1px solid #dee2e6;
+        }
+        section[data-testid="stSidebar"] * {
+            color: #212529;
+        }
+        div[data-testid="stTextInput"] input,
+        div[data-testid="stNumberInput"] input,
+        textarea,
+        select {
+            background-color: #ffffff !important;
+            color: #212529 !important;
+            border-color: #ced4da !important;
+        }
+        div[data-testid="stAlert"] {
+            background-color: #ffffff;
+            color: #212529;
+        }
+        div[data-testid="stButton"] button {
+            background-color: #ffffff;
+            color: #212529;
+            border-color: #ced4da;
+        }
+        div[data-testid="stButton"] button:hover {
+            border-color: #868e96;
+            color: #212529;
+        }
         .metric-card {
             background: linear-gradient(135deg, #ffffff, #f1f3f5);
             border-radius: 14px;
@@ -366,8 +458,20 @@ def alert_settings_page():
     )
 
     if st.button("Send Test Alert"):
-        send_whatsapp_alert("✅ Test alert from Smart School Dashboard. WhatsApp alerts are working.")
-        st.success("Test message sent (check WhatsApp).")
+        phone_to_test = phone_input.strip()
+        if phone_to_test and phone_to_test != st.session_state.alert_state.get("phone", ""):
+            if is_valid_whatsapp_number(phone_to_test):
+                st.session_state.alert_state["phone"] = phone_to_test
+                save_alert_state(st.session_state.alert_state)
+            else:
+                st.error("Enter a valid WhatsApp number before sending the test alert.")
+                return
+
+        ok, message = send_whatsapp_alert("✅ Test alert from Smart School Dashboard. WhatsApp alerts are working.")
+        if ok:
+            st.success(message)
+        else:
+            st.error(message)
 
 # ================== MAIN APP ==================
 
